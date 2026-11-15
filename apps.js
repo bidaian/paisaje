@@ -1,10 +1,7 @@
 (() => {
   'use strict';
 
-  const BATCHES = [
-    ...Array.from({ length: 72 }, (_, i) => `1920-${String(i + 1).padStart(2, '0')}`),
-    ...Array.from({ length: 38 }, (_, i) => `1930-${String(i + 1).padStart(2, '0')}`),
-  ];
+  const BATCHES = ['1920-01'];
 
   const state = {
     images: [],
