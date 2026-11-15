@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EFI: Lengua, migración y paisaje lingüístico</title>
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/openseadragon/5.0.1/openseadragon.min.js"></script>
+  <script src="./io.js" defer></script>
+  <script src="./apps.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>EFI: Lengua, migración y paisaje lingüístico</h1>
+          </div>
+    <div class="top-actions">
+      <label class="language-control">
+        <span class="sr-only">Language</span>
+        <select id="languageSelect" class="language-select" aria-label="Language"></select>
+      </label>
+
+      <div class="menu-wrap">
+        <button id="exportMenuBtn" class="btn secondary menu-button" type="button" aria-haspopup="true" aria-expanded="false">
+          Menu
+        </button>
+        <div id="exportMenu" class="export-menu hidden" role="menu">
+          <button id="exportCurrentTxtBtn" class="menu-item" type="button" role="menuitem">Export card</button>
+          <button id="exportAllBtn" class="menu-item" type="button" role="menuitem">Export all JSON</button>
+          <button id="importAllBtn" class="menu-item" type="button" role="menuitem">Import all JSON</button>
+        </div>
+      </div>
+
+      <input id="importAllInput" type="file" accept="application/json,.json" class="hidden-file-input">
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <div class="manifest-picker">
+        <label for="manifestSelect">Image batch</label>
+        <div class="manifest-controls">
+          <select id="manifestSelect" aria-label="Choose image batch"></select>
+        </div>
+      </div>
+      <div class="panel-heading">
+        <div>
+          <h2>Images</h2>
+          <span id="imageCount" class="muted">0</span>
+        </div>
+        <div class="image-filters">
+          <input id="filterInput" type="search" placeholder="Filter…" aria-label="Filter images">
+          <select id="statusFilter" aria-label="Image status">
+            <option value="all">All</option>
+            <option value="done">Done</option>
+            <option value="not-done">Not done</option>
+          </select>
+        </div>
+      </div>
+      <div id="imageList" class="image-list" aria-live="polite"></div>
+      <div id="imageEmpty" class="empty-state">Load an image batch to populate this list.</div>
+    </aside>
+
+    <section class="workspace">
+      <div class="viewer-toolbar">
+        <div class="current-image">
+          <span id="currentImageDescription" class="current-image-description">Select an image</span>
+          <span id="currentImageName" class="current-image-code"></span>
+          <span id="imageDimensions" class="muted"></span>
+        </div>
+        <div class="tool-group">
+          <button id="selectTool" class="tool active" type="button" title="Explore">✋ Explore</button>
+          <button id="rectTool" class="tool" type="button" title="Add annotation">▭ Add annotation</button>
+          <label class="check-tool">
+            <input id="annotationVisibilityBtn" type="checkbox" checked>
+            <span>Annotations</span>
+          </label>
+          <label class="check-tool">
+            <input id="doneBtn" type="checkbox">
+            <span>Done</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="viewer-shell">
+        <div id="viewer" aria-label="OpenSeadragon image viewer"></div>
+        <div id="drawSurface" class="draw-surface hidden" aria-hidden="true"></div>
+        <div id="drawHint" class="draw-hint hidden">Drag on the image to draw a rectangle</div>
+        <div id="loading" class="viewer-overlay">Select an image to begin</div>
+      </div>
+
+      <div class="statusbar">
+        <span id="statusText">Ready</span>
+        <span id="zoomText">Zoom: —</span>
+      </div>
+    </section>
+
+    <aside class="annotation-panel">
+      <div class="image-fields">
+        <div class="image-field">
+          <label for="imageLocation">Ubicación</label>
+          <input id="imageLocation" type="text" autocomplete="off">
+        </div>
+        <div class="image-field">
+          <label for="imageGeolocation">Geolocalización</label>
+          <input id="imageGeolocation" type="text" autocomplete="off">
+        </div>
+      </div>
+      <div class="panel-heading">
+        <div>
+          <h2>Annotations</h2>
+          <span id="annotationCount" class="muted">0</span>
+        </div>
+      </div>
+      <div id="annotationList" class="annotation-list"></div>
+      <div id="annotationEmpty" class="empty-state">Draw a rectangle to create an annotation.</div>
+    </aside>
+  </main>
+
+  <template id="annotationTemplate">
+    <article class="annotation-card">
+      <div class="annotation-card-head">
+        <input class="annotation-label" type="text" placeholder="Annotation text" maxlength="500">
+        <button class="icon-btn delete-annotation" title="Delete annotation">×</button>
+      </div>
+      <textarea class="annotation-note" rows="3" placeholder="Optional note…" maxlength="2000"></textarea>
+
+      <div class="annotation-language-group">
+        <label for="annotation-language-template">Language</label>
+        <input id="annotation-language-template" class="annotation-language" type="text" value="Español" maxlength="100">
+      </div>
+
+      <div class="annotation-lexical-field-group">
+        <div class="annotation-lexical-header">
+          <div class="annotation-lexical-label">Lexical field</div>
+          <button
+            type="button"
+            class="lexical-add-btn"
+            aria-label="Add a lexical field possibility"
+            title="Add a lexical field possibility"
+            aria-expanded="false"
+          >+</button>
+        </div>
+        <textarea class="annotation-lexical-field" rows="2" placeholder="Add custom terms, separated by commas…"></textarea>
+        <div class="lexical-picker hidden">
+          <div class="lexical-possibilities-label">Possibilities</div>
+          <div class="lexical-options"></div>
+        </div>
+      </div>
+
+      <div class="annotation-meta"></div>
+    </article>
+  </template>
+</body>
+</html>
