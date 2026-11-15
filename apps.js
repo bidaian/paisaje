@@ -17,8 +17,6 @@
     overlayElements: new Map(),
     showAnnotations: true,
     done: new Map(),
-    imageFields: new Map(),
-    lexicalFields: [],
     language: localStorage.getItem('dzi-annotator:language') || 'es',
   };
 
@@ -49,16 +47,10 @@
       explore: 'Explore',
       addAnnotation: 'Add annotation',
       annotations: 'Annotations',
-      lexicalField: 'Lexical field',
-      lexicalCustom: 'Add custom terms, separated by commas…',
-      lexicalPossibilities: 'Possibilities',
-      addLexicalPossibility: 'Add a lexical field possibility',
-      lexicalFieldsLoadError: (msg) => `Could not load lexical_fields.txt: ${msg}`,
       drawRectangle: 'Draw a rectangle to create an annotation.',
       dragRectangle: 'Drag on the image to draw a rectangle',
       optionalNote: 'Optional note…',
       annotationText: 'Annotation text',
-      annotationLanguage: 'Language',
       deleteAnnotation: 'Delete annotation',
       ready: 'Ready',
       zoom: 'Zoom',
@@ -100,11 +92,6 @@
       visibilityOn: 'Annotations visible',
       visibilityOff: 'Annotations hidden',
       done: 'Done',
-      location: 'Location',
-      geolocation: 'Geolocation',
-      authorship: 'Authorship',
-      date: 'Date',
-      sourceCode: 'Topographic signature or source code',
     },
     es: {
       title: 'EFI: Lengua, migración y paisaje lingüístico',
@@ -128,16 +115,10 @@
       explore: 'Explorar',
       addAnnotation: 'Añadir anotación',
       annotations: 'Anotaciones',
-      lexicalField: 'Campo léxico',
-      lexicalCustom: 'Añade términos personalizados, separados por comas…',
-      lexicalPossibilities: 'Posibilidades',
-      addLexicalPossibility: 'Añadir una posibilidad de campo léxico',
-      lexicalFieldsLoadError: (msg) => `No se pudo cargar lexical_fields.txt: ${msg}`,
       drawRectangle: 'Dibuja un rectángulo para crear una anotación.',
       dragRectangle: 'Arrastra sobre la imagen para dibujar un rectángulo',
       optionalNote: 'Nota opcional…',
       annotationText: 'Texto de la anotación',
-      annotationLanguage: 'Idioma',
       deleteAnnotation: 'Eliminar anotación',
       ready: 'Listo',
       zoom: 'Zoom',
@@ -168,11 +149,6 @@
       visibilityOn: 'Anotaciones visibles',
       visibilityOff: 'Anotaciones ocultas',
       done: 'Hecha',
-      location: 'Ubicación',
-      geolocation: 'Geolocalización',
-      authorship: 'Autoría',
-      date: 'Fecha',
-      sourceCode: 'Signatura topográfica o código de origen',
       loadBatchStatus: (batch) => `Cargando ${batch}…`,
       loadingManifest: (batch) => `Cargando images-${batch}.json…`,
       manifestLoaded: (count, batch) => `${count} imagen${count === 1 ? '' : 'es'} cargadas desde images-${batch}.json`,
@@ -206,16 +182,10 @@
       explore: 'Explorar',
       addAnnotation: 'Adicionar anotação',
       annotations: 'Anotações',
-      lexicalField: 'Campo lexical',
-      lexicalCustom: 'Adicione termos personalizados, separados por vírgulas…',
-      lexicalPossibilities: 'Possibilidades',
-      addLexicalPossibility: 'Adicionar uma possibilidade de campo lexical',
-      lexicalFieldsLoadError: (msg) => `Não foi possível carregar lexical_fields.txt: ${msg}`,
       drawRectangle: 'Desenhe um retângulo para criar uma anotação.',
       dragRectangle: 'Arraste sobre a imagem para desenhar um retângulo',
       optionalNote: 'Nota opcional…',
       annotationText: 'Texto da anotação',
-      annotationLanguage: 'Idioma',
       deleteAnnotation: 'Excluir anotação',
       ready: 'Pronto',
       zoom: 'Zoom',
@@ -249,11 +219,6 @@
       visibilityOn: 'Anotações visíveis',
       visibilityOff: 'Anotações ocultas',
       done: 'Concluída',
-      location: 'Localização',
-      geolocation: 'Geolocalização',
-      authorship: 'Autoria',
-      date: 'Data',
-      sourceCode: 'Signatura topográfica ou código de origem',
       loadBatchStatus: (batch) => `Carregando ${batch}…`,
       loadingManifest: (batch) => `Carregando images-${batch}.json…`,
       manifestLoaded: (count, batch) => `${count} imagem${count === 1 ? '' : 'ens'} carregada${count === 1 ? '' : 's'} de images-${batch}.json`,
@@ -282,10 +247,6 @@
     els.exportCurrentTxtBtn.textContent = t('exportText');
     els.importAllBtn.textContent = t('restore');
     document.querySelector('label[for="manifestSelect"]').textContent = t('imageBatch');
-    const locationLabel = document.querySelector('label[for="imageLocation"]');
-    const geolocationLabel = document.querySelector('label[for="imageGeolocation"]');
-    if (locationLabel) locationLabel.textContent = t('location');
-    if (geolocationLabel) geolocationLabel.textContent = t('geolocation');
     const batchPlaceholder = document.getElementById('batchPlaceholder');
     if (batchPlaceholder) batchPlaceholder.textContent = t('chooseBatch');
     document.querySelector('.sidebar .panel-heading h2').textContent = t('images');
@@ -317,22 +278,9 @@
     els.annotationEmpty.textContent = t('drawRectangle');
     const templateLabel = els.annotationTemplate.content.querySelector('.annotation-label');
     const templateNote = els.annotationTemplate.content.querySelector('.annotation-note');
-    const templateLanguageLabel = els.annotationTemplate.content.querySelector('.annotation-language-group label');
-    const templateLexicalField = els.annotationTemplate.content.querySelector('.annotation-lexical-field');
-    const templateLexicalLabel = els.annotationTemplate.content.querySelector('.annotation-lexical-label');
-    const templateLexicalPossibilities = els.annotationTemplate.content.querySelector('.lexical-possibilities-label');
-    const templateLexicalAdd = els.annotationTemplate.content.querySelector('.lexical-add-btn');
     const templateDelete = els.annotationTemplate.content.querySelector('.delete-annotation');
     if (templateLabel) templateLabel.placeholder = t('annotationText');
     if (templateNote) templateNote.placeholder = t('optionalNote');
-    if (templateLanguageLabel) templateLanguageLabel.textContent = t('annotationLanguage');
-    if (templateLexicalField) templateLexicalField.placeholder = t('lexicalCustom');
-    if (templateLexicalLabel) templateLexicalLabel.textContent = t('lexicalField');
-    if (templateLexicalPossibilities) templateLexicalPossibilities.textContent = t('lexicalPossibilities');
-    if (templateLexicalAdd) {
-      templateLexicalAdd.title = t('addLexicalPossibility');
-      templateLexicalAdd.setAttribute('aria-label', t('addLexicalPossibility'));
-    }
     if (templateDelete) templateDelete.title = t('deleteAnnotation');
 
     const langOptions = [
@@ -367,7 +315,6 @@
       'viewer', 'drawSurface', 'manifestSelect',
       'imageList', 'imageCount', 'imageEmpty', 'filterInput', 'exportAllBtn',
       'currentImageName', 'currentImageDescription', 'imageDimensions', 'selectTool', 'rectTool',
-      'imageLocation', 'imageGeolocation',
       'drawHint', 'loading', 'statusText',
       'zoomText', 'exportCurrentTxtBtn', 'annotationList', 'annotationCount', 'annotationEmpty', 'annotationTemplate',
       'languageSelect', 'annotationVisibilityBtn', 'doneBtn', 'statusFilter',
@@ -390,57 +337,12 @@
     }
   }
 
-  async function loadLexicalFields() {
-    try {
-      const response = await fetch('./lexical_fields.txt', { cache: 'no-store' });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const text = await response.text();
-      const seen = new Set();
-      state.lexicalFields = text
-        .split(/\r?\n/)
-        .map((value) => value.trim())
-        .filter((value) => value && !seen.has(value) && seen.add(value));
-    } catch (error) {
-      state.lexicalFields = [];
-      console.error('Lexical fields load error:', error);
-    }
-  }
-
-  function lexicalParts(value) {
-    return String(value ?? '')
-      .split(',')
-      .map((part) => part.trim())
-      .filter(Boolean);
-  }
-
-  function updateLexicalCheckboxes(container, value) {
-    if (!container) return;
-    const selected = new Set(lexicalParts(value));
-    container.querySelectorAll('input[type="checkbox"]').forEach((input) => {
-      input.checked = selected.has(input.value);
-    });
-  }
-
-  function lexicalValueWithCheckboxes(currentValue, checkedValues) {
-    const checked = new Set(checkedValues);
-    const currentParts = lexicalParts(currentValue);
-    const known = state.lexicalFields.filter((field) => checked.has(field));
-    const custom = currentParts.filter((part) => !state.lexicalFields.includes(part));
-    return [...known, ...custom].join(', ');
-  }
-
   function storageKey(imageId) { return `dzi-annotator:${imageId}`; }
 
   function loadAnnotations(imageId) {
     try {
       const raw = localStorage.getItem(storageKey(imageId));
-      if (!raw) return [];
-      const annotations = JSON.parse(raw);
-      if (!Array.isArray(annotations)) return [];
-      return annotations.map((annotation) => ({
-        ...annotation,
-        language: annotation.language || 'Español',
-      }));
+      return raw ? JSON.parse(raw) : [];
     } catch (err) {
       console.warn('Could not load annotations:', err);
       return [];
@@ -483,54 +385,6 @@
     if (state.current?.c === image.c) renderDoneControl();
   }
 
-  function imageFieldsStorageKey(imageId) {
-    return `dzi-annotator:image-fields:${imageId}`;
-  }
-
-  function loadImageFields(image) {
-    try {
-      const raw = localStorage.getItem(imageFieldsStorageKey(image.c));
-      if (raw) {
-        const value = JSON.parse(raw);
-        return {
-          location: String(value?.location ?? ''),
-          geolocation: String(value?.geolocation ?? ''),
-        };
-      }
-    } catch (error) {
-      console.warn('Could not load image fields:', error);
-    }
-
-    return {
-      location: image.pa || '',
-      geolocation: '',
-    };
-  }
-
-  function saveImageFields(imageId, fields) {
-    const value = {
-      location: String(fields?.location ?? ''),
-      geolocation: String(fields?.geolocation ?? ''),
-    };
-    state.imageFields.set(imageId, value);
-    localStorage.setItem(imageFieldsStorageKey(imageId), JSON.stringify(value));
-  }
-
-  function getImageFields(image) {
-    if (!image) return { location: '', geolocation: '' };
-    if (!state.imageFields.has(image.c)) {
-      state.imageFields.set(image.c, loadImageFields(image));
-    }
-    return state.imageFields.get(image.c);
-  }
-
-  function renderImageFields() {
-    if (!els.imageLocation || !els.imageGeolocation) return;
-    const fields = getImageFields(state.current);
-    els.imageLocation.value = fields.location;
-    els.imageGeolocation.value = fields.geolocation;
-  }
-
   async function loadManifest(batch) {
     setStatus(t('loadBatchStatus', batch));
 
@@ -543,7 +397,6 @@
       }
 
       state.currentBatch = batch;
-      state.imageFields = new Map();
       state.images = payload.images
         .map((image) => ({
           ...image,
@@ -559,8 +412,6 @@
       els.currentImageName.textContent = t('selectImage');
       els.currentImageDescription.textContent = '';
       els.imageDimensions.textContent = '';
-      if (els.imageLocation) els.imageLocation.value = '';
-      if (els.imageGeolocation) els.imageGeolocation.value = '';
       els.loading.textContent = t('imageStart');
       els.loading.classList.remove('hidden');
       renderImageList();
@@ -768,7 +619,6 @@
     state.current = image;
     state.selectedId = null;
     state.annotations.set(image.c, loadAnnotations(image.c));
-    renderImageFields();
     state.done.set(image.c, loadDone(image.c));
     renderDoneControl();
     els.currentImageDescription.textContent = image.pa || t('noDescription');
@@ -847,8 +697,6 @@
       id: crypto.randomUUID(),
       label: t('newRegion'),
       note: '',
-      lexicalField: '',
-      language: 'Español',
       x: rect.x,
       y: rect.y,
       width: rect.width,
@@ -884,9 +732,9 @@
 
     const list = state.current ? (state.annotations.get(state.current.c) || []) : [];
     const tiled = viewer.world.getItemAt(0);
-    for (const [index, annotation] of list.entries()) {
+    for (const annotation of list) {
       const element = document.createElement('div');
-      element.className = `annotation-overlay annotation-color-${index % 6}` + (annotation.id === state.selectedId ? ' selected' : '');
+      element.className = 'annotation-overlay' + (annotation.id === state.selectedId ? ' selected' : '');
       const label = document.createElement('div');
       label.className = 'overlay-label';
       label.textContent = annotation.label || t('untitled');
@@ -910,111 +758,34 @@
     els.annotationCount.textContent = String(list.length);
     els.annotationEmpty.classList.toggle('hidden', list.length > 0);
 
-    for (const [index, annotation] of list.entries()) {
+    for (const annotation of list) {
       const fragment = els.annotationTemplate.content.cloneNode(true);
       const card = fragment.querySelector('.annotation-card');
-      card.classList.add(`annotation-tone-${index % 4}`);
       const label = fragment.querySelector('.annotation-label');
       const note = fragment.querySelector('.annotation-note');
-      const language = fragment.querySelector('.annotation-language');
-      const lexicalField = fragment.querySelector('.annotation-lexical-field');
-      const lexicalPicker = fragment.querySelector('.lexical-picker');
-      const lexicalAddBtn = fragment.querySelector('.lexical-add-btn');
-      const lexicalOptions = fragment.querySelector('.lexical-options');
       const meta = fragment.querySelector('.annotation-meta');
-
-      label.value = annotation.label || '';
-      note.value = annotation.note || '';
-      language.value = annotation.language || 'Español';
-      lexicalField.value = annotation.lexicalField || '';
+      label.value = annotation.label;
+      note.value = annotation.note;
       meta.textContent = `x ${annotation.x}, y ${annotation.y}, w ${annotation.width}, h ${annotation.height}`;
       card.classList.toggle('selected', annotation.id === state.selectedId);
 
-      for (const field of state.lexicalFields) {
-        const optionLabel = document.createElement('label');
-        optionLabel.className = 'lexical-option';
-
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.value = field;
-        checkbox.checked = lexicalParts(annotation.lexicalField).includes(field);
-
-        const text = document.createElement('span');
-        text.textContent = field;
-
-        optionLabel.appendChild(checkbox);
-        optionLabel.appendChild(text);
-        lexicalOptions.appendChild(optionLabel);
-
-        checkbox.addEventListener('change', () => {
-          const checkedValues = Array.from(lexicalOptions.querySelectorAll('input[type="checkbox"]:checked'))
-            .map((input) => input.value);
-          lexicalField.value = lexicalValueWithCheckboxes(lexicalField.value, checkedValues);
-          updateAnnotation(annotation.id, { lexicalField: lexicalField.value });
-
-          // Close the possibilities list after adding or removing one field.
-          // Press + again to choose another possibility.
-          lexicalPicker.classList.add('hidden');
-          lexicalAddBtn.setAttribute('aria-expanded', 'false');
-        });
-      }
-
       card.addEventListener('click', (event) => {
-        if (
-          event.target === label ||
-          event.target === note ||
-          event.target === language ||
-          event.target === lexicalField ||
-          event.target.closest('.lexical-picker') ||
-          event.target.closest('.lexical-add-btn') ||
-          event.target.closest('.delete-annotation')
-        ) return;
-
+        if (event.target === label || event.target === note || event.target.closest('.delete-annotation')) return;
         state.selectedId = annotation.id;
         renderAnnotationList();
         renderAnnotations();
         focusAnnotation(annotation);
       });
-
       label.addEventListener('pointerdown', (event) => event.stopPropagation());
       note.addEventListener('pointerdown', (event) => event.stopPropagation());
-      language.addEventListener('pointerdown', (event) => event.stopPropagation());
-      lexicalField.addEventListener('pointerdown', (event) => event.stopPropagation());
-      lexicalAddBtn.addEventListener('pointerdown', (event) => event.stopPropagation());
-      lexicalPicker.addEventListener('pointerdown', (event) => event.stopPropagation());
-      lexicalOptions.addEventListener('pointerdown', (event) => event.stopPropagation());
       label.addEventListener('click', (event) => event.stopPropagation());
       note.addEventListener('click', (event) => event.stopPropagation());
-      language.addEventListener('click', (event) => event.stopPropagation());
-      lexicalField.addEventListener('click', (event) => event.stopPropagation());
-      lexicalAddBtn.addEventListener('click', (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-
-        const open = lexicalPicker.classList.contains('hidden');
-        lexicalPicker.classList.toggle('hidden', !open);
-        lexicalAddBtn.setAttribute('aria-expanded', String(open));
-
-        if (open) {
-          updateLexicalCheckboxes(lexicalOptions, lexicalField.value);
-        }
-      });
-      lexicalPicker.addEventListener('click', (event) => event.stopPropagation());
-      lexicalOptions.addEventListener('click', (event) => event.stopPropagation());
-
       label.addEventListener('input', () => updateAnnotation(annotation.id, { label: label.value }));
       note.addEventListener('input', () => updateAnnotation(annotation.id, { note: note.value }));
-      language.addEventListener('input', () => updateAnnotation(annotation.id, { language: language.value }));
-      lexicalField.addEventListener('input', () => {
-        updateAnnotation(annotation.id, { lexicalField: lexicalField.value });
-        updateLexicalCheckboxes(lexicalOptions, lexicalField.value);
-      });
-
       card.querySelector('.delete-annotation').addEventListener('click', (event) => {
         event.stopPropagation();
         deleteAnnotation(annotation.id);
       });
-
       els.annotationList.appendChild(fragment);
     }
   }
@@ -1074,18 +845,6 @@
     els.rectTool.addEventListener('click', () => setTool('rect'));
     els.annotationVisibilityBtn.addEventListener('change', toggleAnnotations);
     els.doneBtn.addEventListener('change', () => { if (state.current) { state.done.set(state.current.c, els.doneBtn.checked); saveDone(state.current.c, els.doneBtn.checked); renderImageList(); renderDoneControl(); } });
-    els.imageLocation.addEventListener('input', () => {
-      if (!state.current) return;
-      const fields = getImageFields(state.current);
-      fields.location = els.imageLocation.value;
-      saveImageFields(state.current.c, fields);
-    });
-    els.imageGeolocation.addEventListener('input', () => {
-      if (!state.current) return;
-      const fields = getImageFields(state.current);
-      fields.geolocation = els.imageGeolocation.value;
-      saveImageFields(state.current.c, fields);
-    });
     els.languageSelect.addEventListener('change', (event) => setLanguage(event.target.value));
   }
 
@@ -1093,7 +852,6 @@
     initDom();
     wireEvents();
     createViewer();
-    await loadLexicalFields();
     applyLocalization();
     window.DZIIO.init({
       state,
@@ -1111,8 +869,6 @@
       getCurrentImage: () => state.current,
       getCurrentBatch: () => state.currentBatch,
       getImages: () => state.images,
-      getImageFields,
-      saveImageFields,
     });
     setTool('select');
   }

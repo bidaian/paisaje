@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -96,16 +96,6 @@
     </section>
 
     <aside class="annotation-panel">
-      <div class="image-fields">
-        <div class="image-field">
-          <label for="imageLocation">Ubicación</label>
-          <input id="imageLocation" type="text" autocomplete="off">
-        </div>
-        <div class="image-field">
-          <label for="imageGeolocation">Geolocalización</label>
-          <input id="imageGeolocation" type="text" autocomplete="off">
-        </div>
-      </div>
       <div class="panel-heading">
         <div>
           <h2>Annotations</h2>
@@ -124,30 +114,6 @@
         <button class="icon-btn delete-annotation" title="Delete annotation">×</button>
       </div>
       <textarea class="annotation-note" rows="3" placeholder="Optional note…" maxlength="2000"></textarea>
-
-      <div class="annotation-language-group">
-        <label for="annotation-language-template">Language</label>
-        <input id="annotation-language-template" class="annotation-language" type="text" value="Español" maxlength="100">
-      </div>
-
-      <div class="annotation-lexical-field-group">
-        <div class="annotation-lexical-header">
-          <div class="annotation-lexical-label">Lexical field</div>
-          <button
-            type="button"
-            class="lexical-add-btn"
-            aria-label="Add a lexical field possibility"
-            title="Add a lexical field possibility"
-            aria-expanded="false"
-          >+</button>
-        </div>
-        <textarea class="annotation-lexical-field" rows="2" placeholder="Add custom terms, separated by commas…"></textarea>
-        <div class="lexical-picker hidden">
-          <div class="lexical-possibilities-label">Possibilities</div>
-          <div class="lexical-options"></div>
-        </div>
-      </div>
-
       <div class="annotation-meta"></div>
     </article>
   </template>
